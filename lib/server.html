@@ -1,0 +1,16 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Baldwin Bot</title>
+<style>body{background:#0b0e14;color:#fff;font-family:sans-serif;display:flex;flex-direction:column;align-items:center;padding:20px} .card{background:#151a27;padding:25px;border-radius:15px;width:90%;max-width:380px;text-align:center;border:1px solid #2a3147} input{width:90%;padding:12px;margin:10px 0;border-radius:8px;border:none} button{padding:12px 20px;border:none;border-radius:8px;background:#4f46e5;color:#fff;font-weight:bold;cursor:pointer} #code{font-size:32px;letter-spacing:5px;margin:20px 0;color:#22c55e} #qrimg{width:100%;max-width:280px;margin:10px auto}</style></head><body>
+<h2>Baldwin iv x sultan Saladi</h2><p>Owner: Simon tech inc (09166265317)</p>
+<div class="card">
+<div><button onclick="setMode('pairing')">Pairing Code Mode</button> <button onclick="setMode('qr')">QR Mode</button></div>
+<input id="num" placeholder="2349166265317">
+<button onclick="pair()">Get 8 Digit Code</button>
+<div id="code">------</div>
+<img id="qrimg" style="display:none">
+<div id="status">Not Connected</div>
+</div>
+<script>
+async function pair(){ const n=document.getElementById('num').value; const r=await fetch('/pair',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({number:n})}); const j=await r.json(); if(j.code) document.getElementById('code').innerText=j.code; else alert(j.error) }
+async function setMode(m){ await fetch('/setmode',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:m})}); alert('Mode set to '+m) }
+setInterval(async()=>{ const r=await fetch('/info'); const j=await r.json(); document.getElementById('status').innerText=j.connected?'CONNECTED AS '+j.number:j.mode+' waiting'; if(j.qr){ document.getElementById('qrimg').style.display='block'; document.getElementById('qrimg').src=j.qr } if(j.code) document.getElementById('code').innerText=j.code },2000)
+</script></body></html>
